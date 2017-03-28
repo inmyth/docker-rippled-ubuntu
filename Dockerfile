@@ -12,13 +12,7 @@ RUN \
   apt-get install -y software-properties-common && \
   apt-get install -y byobu curl git htop man unzip vim wget iptables && \
 rm -rf /var/lib/apt/lists/*
-
-
-#Install Supervisor
-RUN apt-get update && apt-get install -y openssh-server apache2 supervisor
-RUN mkdir -p /var/lock/apache2 /var/run/apache2 /var/run/sshd /var/log/supervisor	
-
-
+	
 #Install Rippled (alien is installed on top)
 RUN rpm -Uvh https://mirrors.ripple.com/ripple-repo-el7.rpm
 RUN yumdownloader --enablerepo=ripple-stable --releasever=el7 rippled
@@ -38,12 +32,10 @@ ENV HOME /root
 WORKDIR /root
 
 COPY rippled.cfg /opt/ripple/etc/
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 EXPOSE 5006
 # Define default command.
 
 ENTRYPOINT  /opt/ripple/bin/rippled  --conf=/opt/ripple/etc/rippled.cfg --start -a
-#CMD ["supervisord -c /etc/supervisor/conf.d/supervisord.conf"]
-#CMD ["bash/bin"]
+
 
